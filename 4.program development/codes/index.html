@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,  initial-scale=1.0">
+    <title>calculator</title>
+</head>
+<script>
+    let time = new Date().getTime();
+    let vw = window.innerWidth; //get viewport width
+    let vh = window.innerHeight; //get viewport height
+    let is = vw > vh; //interface scheme
+    console.log("is = "+is);
+    let buttonHeight = is ? (70-5)/4 : (70-5)/5;
+    let buttonWidth = is ? (100-3)/5 : (100-3)/4;
+    //follow viewport change layout
+    let fs = buttonWidth*vw/100>buttonHeight*vh/100 ? buttonHeight/2.2 : buttonWidth/2.2;//fontSize
+    let wOrH = buttonWidth*vw/100>buttonHeight*vh/100 ? "vh" : "vw";//width or height
+    document.write(`<style>
+        .textView .bigText{
+            font-size: ` + fs*1.5+wOrH + `;
+
+        }
+        .textView .text{
+            font-size: ` + fs*0.5+wOrH + `;
+        }
+        .buttonContainer div{
+            width: ` + buttonWidth + `vw;
+            height:` + buttonHeight + `vh;
+            line-height:` + buttonHeight + `vh;
+            font-size: ` + fs+wOrH + `;
+        }
+        .buttonContainer div:nth-child(` + (is ? 5 : 4) + `n+1){
+            margin-left: 0.5vw;
+        }
+    </style>`);
+    //button array
+    //[buttonText and className,  defaultBackgroundColor,  onMouseOverBackgroundColor,  onMouseDownBackgroundColor]
+    let btArray;
+    if(is) {
+        btArray = [
+            ["7", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["8", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["9", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["C", "#323232", "#3c3c3c", "#323232", "#323232", "#3c3c3c"], 
+            ["⬅", "#323232", "#3c3c3c", "#323232", "#323232", "#3c3c3c"], 
+            ["4", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["5", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["6", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["+", "#323232", "#3c3c3c", "#323232", "#323232", "#3c3c3c"], 
+            ["-", "#323232", "#3c3c3c", "#323232", "#323232", "#3c3c3c"], 
+            ["1", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["2", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["3", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["x", "#323232", "#3c3c3c", "#323232", "#323232", "#3c3c3c"], 
+            ["÷", "#323232", "#3c3c3c", "#323232", "#323232", "#3c3c3c"], 
+            [".", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["0", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["", "#323232", "#3c3c3c", "#323232", "#323232", "#3c3c3c"], 
+            ["", "#323232", "#3c3c3c", "#323232", "#323232", "#3c3c3c"], 
+            ["=", "#323232", "#3c3c3c", "#323232", "#323232", "#3c3c3c"]
+        ];
+    }else {
+        btArray = [
+            ["+", "#323232", "#3c3c3c", "#323232", "#323232", "#3c3c3c"], 
+            ["-", "#323232", "#3c3c3c", "#323232", "#323232", "#3c3c3c"], 
+            ["x", "#323232", "#3c3c3c", "#323232", "#323232", "#3c3c3c"], 
+            ["÷", "#323232", "#3c3c3c", "#323232", "#323232", "#3c3c3c"],
+            ["7", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["8", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["9", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["⬅", "#323232", "#3c3c3c", "#323232", "#323232", "#3c3c3c"], 
+            ["4", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["5", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["6", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["C", "#323232", "#3c3c3c", "#323232", "#323232", "#3c3c3c"], 
+            ["1", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["2", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["3", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["", "#323232", "#3c3c3c", "#323232", "#323232", "#3c3c3c"], 
+            [".", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["0", "#3c3c3c", "#323232", "#3c3c3c", "#282828", "#323232"], 
+            ["", "#323232", "#3c3c3c", "#323232", "#323232", "#3c3c3c"], 
+            ["=", "#323232", "#3c3c3c", "#323232", "#323232", "#3c3c3c"]
+        ];
+    }
+
+    //follow viewport change layout
+
+</script>
+<style>
+    body{
+        background-color: #202020;
+        padding: 0;
+        margin: 0;
+    }
+    .button{
+        width: 10vh;
+        height: 10vh;
+        box-sizing: border-box; 
+        line-height: 9vh;
+        color: #eee;
+        text-align: center;
+        font-size: 6vh;
+        border: 0.3vw solid #eee;
+        border-radius: 1vw;
+        position: fixed;
+        top: 2vw;
+        left: 2vw;
+        cursor: pointer;
+        z-index: 999;
+    }
+    .textView{
+        width: 100vw;
+        height: 30vh;
+    }
+    .buttonContainer{
+        width: 100vw;
+        height: 70vh;
+    }
+    .side .box{
+        width:25vw; 
+        height:100vh; 
+        position:fixed;
+        background-color:#2c2c2c;
+        border-radius:0 2vw 2vw 0;
+        box-shadow: 1vw -1vw 1vw #1c1c1c;
+        padding-top: 15vh;
+    }
+    .side .box .item{
+        width:25vw;
+        height: 7vw;
+        line-height: 6vw;
+        color: #eee;
+        text-align: center;
+        font-size: 3vw;
+        border-radius:0 1vw 1vw 0;
+        cursor: pointer;
+    }
+    .side .box .item:hover{
+        background-color: #393939;
+    }
+    .textView p{
+        line-height: 10vh;
+        box-sizing: border-box; 
+        text-align: right;
+        padding-right: 5vh;
+        margin: 0;
+    }
+    .textView .bigText{
+        color: #fff;
+        height: 16vh;
+        margin-top: 4vh;
+
+    }
+    .textView .text{
+        color: #888;
+        height: 10vh;
+    }
+    .buttonContainer div{
+        color: #ccc;
+        text-align: center;
+        float: left;
+        border-radius: 0.5vw;
+        margin: 0.5vh 0.5vw 0.5vh 0;
+        box-sizing: border-box; 
+        cursor: pointer;
+    }
+</style>
+
+<body>  
+    <div id="container">
+        <div class="button">三</div>
+        <div class="side"></div>
+        <div class="textView">
+            <p class="text"></p>
+            <p class="bigText">0</p>
+        </div>
+        <div class="buttonContainer">
+        </div>
+    </div>
+<script>    
+    console.log(time);
+    let container = document.getElementById("container"); //get cotainer
+    let btCont = document.getElementsByClassName("buttonContainer")[0]; //get buttonCotainer
+    let bigText = document.getElementsByClassName("bigText")[0]; //get bigText
+    let text = document.getElementsByClassName("text")[0]; //get text
+    let bt = document.getElementsByClassName("button")[0]; //get button
+    let btStr = ""; //add buttons string
+    let flag = false;
+    let ope = ""; //oprator
+    let numLen = vw / (parseFloat(window.getComputedStyle(bigText).fontSize)/1.6);
+
+    bt.onclick = function () {
+        this.style.backgroundColor = this.style.backgroundColor=="rgb(238, 238, 238)" ? "#202020" : "#eeeeee";  
+        this.style.color = this.style.backgroundColor=="rgb(238, 238, 238)" ? "#202020" :   "#eeeeee";
+
+        //loading side navigation bar
+        let side = document.getElementsByClassName("side")[0]; //get side
+        console.log(side);
+        //generate side navigation bar
+        if (side.innerHTML=="") {
+            let sideStr = "";
+            sideStr += `
+                <div class="box">
+                    <div class='item' onclick="this.style.backgroundColor='#393939'; setTimeout(function(){
+                        document.getElementsByClassName(\'side\')[0].innerHTML=\'\'},100);
+                        bt.style.backgroundColor = bt.style.backgroundColor=='rgb(238, 238, 238)' ? '#202020' : '#eeeeee';  
+                        bt.style.color = bt.style.backgroundColor=='rgb(238, 238, 238)' ? '#202020' :   '#eeeeee';
+                        
+                        
+                        ">standard</div>
+                </div>
+            
+            `;
+            side.innerHTML = sideStr;
+        }else{
+            side.innerHTML = "";
+        }
+        
+    }
+    //add button and set defaultBackgroundColor
+    for(let i = 0; i<btArray.length; i++) {
+        let clazz = " class='" + btArray[i][0] + ""; //button className
+        let style = " style='background-color:" + btArray[i][1] + "'; "; //button style
+        let onMouseOver = " onmouseover='this.style.backgroundColor=\"" + btArray[i][2] + "\"; "; //button onMouseOver
+        let onMouseOut = " onmouseout='this.style.backgroundColor=\"" + btArray[i][3] + "\"; "; //button onMouseOver
+        let onMouseDown = " onmousedown='this.style.backgroundColor=\"" + btArray[i][4] + "\"; "; //button onMouseDown
+        let onMouseUp = " onmouseup='this.style.backgroundColor=\"" + btArray[i][5] + "\"; "; //button onMouseUp
+        switch(btArray[i][0]) {
+            case "C" :
+                onMouseDown += "bigText.innerHTML = \"0\"; text.innerHTML = \"\"; ope = \"\"";
+                break;
+            case "⬅" :
+                onMouseDown += `
+                    if(bigText.innerHTML.length>1) {
+                        bigText.innerHTML = bigText.innerHTML.substr(0,bigText.innerHTML.length-1);
+                    }else {
+                        bigText.innerHTML = \"0\";
+                    }
+                    `;
+                    console.log(onMouseDown);
+                break;
+            case "+" :
+                
+            case "-" :
+                
+            case "x" :
+                
+            case "÷" :
+                onMouseDown += `
+                        if(!flag) {
+                            if(text.innerHTML!=\"\"){
+                                let a = parseFloat(text.innerHTML); // get first number
+                                let b = parseFloat(bigText.innerHTML); // get second number
+                                switch(ope) {
+                                    case \"+\" :
+                                        bigText.innerHTML = a + b;
+                                        break;
+                                    case \"-\" :
+                                        bigText.innerHTML = a - b;
+                                        break;
+                                    case \"x\" :
+                                        bigText.innerHTML = a * b;
+                                        break;
+                                    case \"÷\" :
+                                        bigText.innerHTML = a / b;
+                                }
+                            }
+                        }
+                        text.innerHTML = bigText.innerHTML + " " + this.innerHTML + " ";
+                        ope = this.innerHTML;
+                        flag = true;
+                    `;
+                break;
+            case "=" :
+                onMouseDown += `
+                    if(!text.innerHTML.includes("=")){
+                        if(text.innerHTML=="") {
+                            text.innerHTML = bigText.innerHTML + " = ";
+                            return;
+                        }
+                        text.innerHTML += bigText.innerHTML + " = ";
+                        flag = !flag;
+                        let a = parseFloat(text.innerHTML); // get first number
+                        let b = parseFloat(bigText.innerHTML); // get second number
+                        switch(ope) {
+                            case \"+\" :
+                                bigText.innerHTML = ((a + b) + "").length>numLen ? (a + b).toExponential(numLen-8) : a + b;
+                                break;
+                            case \"-\" :
+                                bigText.innerHTML = ((a - b) + "").length>numLen ? (a - b).toExponential(numLen-8) : a - b;
+                                break;
+                            case \"x\" :
+                                bigText.innerHTML = ((a * b) + "").length>numLen ? (a * b).toExponential(numLen-8) : a * b;
+                                break;
+                            default :
+                                bigText.innerHTML = ((a / b) + "").length>numLen ? (a / b).toExponential(numLen-8) : a / b;
+                        }
+                    }else {
+                        if(ope!=""){
+                            let a = parseFloat(bigText.innerHTML); // get first number
+                            let b = parseFloat(text.innerHTML.substr(text.innerHTML.lastIndexOf(ope)+1,text.innerHTML.length-1)); // get second number
+                            text.innerHTML = a + " " + ope + b + " = ";
+                            switch(ope) {
+                                case \"+\" :
+                                    bigText.innerHTML = ((a + b) + "").length>numLen ? (a + b).toExponential(numLen-8) : a + b;
+                                    break;
+                                case \"-\" :
+                                    bigText.innerHTML = ((a - b) + "").length>numLen ? (a - b).toExponential(numLen-8) : a - b;
+                                    break;
+                                case \"x\" :
+                                    bigText.innerHTML = ((a * b) + "").length>numLen ? (a * b).toExponential(numLen-8) : a * b;
+                                    break;
+                                default :
+                                    bigText.innerHTML = ((a / b) + "").length>numLen ? (a / b).toExponential(numLen-8) : a / b;
+                            }
+                        }
+                    }
+                `;
+                break;
+            case "." :
+                onMouseDown += `
+                        if(this.innerHTML == "." && !bigText.innerHTML.includes(".")) {
+                            bigText.innerHTML += this.innerHTML;
+                        }
+                        else { 
+                        }
+                `;
+                break;
+            default:
+                onMouseDown += `
+                    if (flag) {
+                        bigText.innerHTML = this.innerHTML;
+                        flag = !flag;
+                        if(text.innerHTML.includes("=")){
+                            text.innerHTML = "";
+                        }
+                        return;
+                    }
+                    if(bigText.innerHTML.length<` + numLen + `){
+                        if(bigText.innerHTML=="0") {
+                            bigText.innerHTML = this.innerHTML;
+                            if(this.innerHTML == "." && !bigText.innerHTML.includes(".")) {
+                                bigText.innerHTML += this.innerHTML;
+                            }
+                        }else {
+                            bigText.innerHTML += this.innerHTML;
+                        }
+                        if(this.innerHTML == "." && !bigText.innerHTML.includes(".")) {
+                            bigText.innerHTML += this.innerHTML;
+                        }
+                    }else { 
+                    }
+                `;
+        }
+        clazz += "'"; style += "'"; onMouseOver += "'"; onMouseOut += "'"; onMouseDown += "'"; onMouseUp += "'";
+        btStr += "<div " + clazz + style + onMouseOver + onMouseOut + onMouseDown + onMouseUp + ">" + btArray[i][0] + "</div>"; //add all
+    }
+
+    btCont.innerHTML += btStr; //render interface
+    console.log(new Date().getTime()-time);
+</script>
+</body>
+</html>
+
